@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anima Désertique — The desert within</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#05080f; --sand:#f1e6d2; --gold:#d9a95b; --mute:rgba(241,230,210,.74);
+  --serif:'Cormorant Garamond','Times New Roman',serif; --sans:'Jost','Helvetica Neue',Arial,sans-serif;
+  --pad:clamp(20px,5vw,72px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+body{background:var(--ink);color:var(--sand);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+.stage{position:fixed;inset:0;z-index:0;background:var(--ink)}
+#cv{width:100%;height:100%;display:block}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(5,8,15,.6) 0%,rgba(5,8,15,.12) 55%,rgba(5,8,15,0) 100%),
+             linear-gradient(0deg,rgba(5,8,15,.45),rgba(5,8,15,0) 40%)}
+
+header{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;
+  padding:calc(22px + env(safe-area-inset-top,0px)) var(--pad) 22px;mix-blend-mode:difference}
+.brand{font-family:var(--serif);font-size:clamp(15px,1.6vw,19px);letter-spacing:.32em;text-transform:uppercase}
+.brand small{font-family:var(--sans);font-size:.6em;letter-spacing:.3em;opacity:.7;margin-left:.8em}
+
+.bar{position:fixed;right:var(--pad);top:50%;z-index:10;width:1px;height:120px;background:rgba(241,230,210,.25);transform:translateY(-50%)}
+.bar i{display:block;width:100%;height:100%;background:var(--gold);transform-origin:top;transform:scaleY(0)}
+
+/* loader */
+.load{position:fixed;left:0;top:0;height:2px;width:100%;z-index:20;background:var(--gold);transform-origin:left;transform:scaleX(0);transition:opacity .6s .2s}
+.load.done{opacity:0}
+
+main{position:relative;z-index:5}
+section{min-height:100vh;min-height:100svh;display:flex;align-items:center;justify-content:flex-start;text-align:left;padding:12vh var(--pad)}
+section .copy{max-width:min(560px,100%);opacity:0;transform:translate3d(0,24px,0);will-change:opacity,transform}
+.kicker{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:22px;display:block}
+h1,h2{font-family:var(--serif);font-weight:300;line-height:.98;letter-spacing:-.01em}
+h1{font-size:clamp(54px,11vw,168px)}
+h2{font-size:clamp(38px,6vw,92px)}
+h2 em,h1 em{font-style:italic;font-weight:300}
+.tag{font-family:var(--serif);font-style:italic;font-size:clamp(20px,2.2vw,30px);color:var(--gold);margin:14px 0 0}
+p.t{margin-top:26px;font-size:clamp(15px,1.25vw,17px);line-height:1.75;color:var(--mute);max-width:44ch}
+.hero{align-items:flex-end;padding-bottom:14vh}
+.hero .copy{max-width:none}
+.hero p.sub{font-family:var(--serif);font-style:italic;font-size:clamp(20px,2.4vw,34px);margin-top:18px;color:var(--mute)}
+.scroll{position:fixed;left:var(--pad);bottom:calc(26px + env(safe-area-inset-bottom,0px));z-index:10;
+  font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--mute);display:flex;align-items:center;gap:14px;transition:opacity .5s}
+.scroll::after{content:"";width:38px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);animation:drip 2.2s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleX(0);transform-origin:left}50%{transform:scaleX(1);transform-origin:left}51%{transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
+.end h2{font-size:clamp(34px,7vw,110px);letter-spacing:.06em;text-transform:uppercase}
+
+@media (max-width:760px){
+  .stage::after{background:linear-gradient(0deg,rgba(5,8,15,.82),rgba(5,8,15,.15) 70%)}
+  section{align-items:flex-end;padding-bottom:14vh}
+  .bar,.brand small{display:none}
+}
+@media (prefers-reduced-motion:reduce){section .copy{opacity:1!important;transform:none!important}.scroll::after{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="load" id="load"></div>
+<div class="stage"><canvas id="cv"></canvas></div>
+<header><div class="brand">Anima Désertique<small>Jamaloil</small></div></header>
+<div class="bar"><i id="bar"></i></div>
+<div class="scroll" id="hint">Scroll</div>
+
+<main>
+  <section class="hero"><div class="copy">
+    <span class="kicker">Nomadic memory · Niche perfumery</span>
+    <h1>Anima <em>Désertique</em></h1>
+    <p class="sub">The desert within.</p>
+  </div></section>
+
+  <section><div class="copy">
+    <span class="kicker">01 / Substance</span>
+    <h2>A drop already <em>holds a memory.</em></h2>
+    <p class="t">Five weeks of maturation. The oils rest, the accords take shape. Through the Nectar Fusion process, matter becomes spirit.</p>
+  </div></section>
+
+  <section><div class="copy">
+    <span class="kicker">02 / Zāwiya</span>
+    <h2>A threshold <em>within a threshold.</em></h2>
+    <p class="t">Inspired by the doors of Moroccan sanctuaries, the bottle holds the fragrance within a symbol of protection and light.</p>
+  </div></section>
+
+  <section><div class="copy">
+    <span class="kicker">03 / The desert is an inner landscape</span>
+    <h2>Silence. <em>Space. Depth.</em></h2>
+    <p class="t">A blue veil carried by the wind — the nomadic memory of Redy Jihar's Berber and Tuareg roots, made visible.</p>
+  </div></section>
+
+  <section><div class="copy">
+    <span class="kicker">Five inner landscapes · 05</span>
+    <h2>Pêche Nude</h2><p class="tag">Nectar of light</p>
+    <p class="t">A raw peach meets the warmth of the desert — velvety, luminous, sensual. A caress away.</p>
+  </div></section>
+
+  <section><div class="copy">
+    <span class="kicker">Five inner landscapes · 04</span>
+    <h2>Oud Aura Sablé</h2><p class="tag">Inner light</p>
+    <p class="t">An eclipse becomes fragrance. The wind carries it across the dunes, where it meets suede and the depth of oud.</p>
+  </div></section>
+
+  <section><div class="copy">
+    <span class="kicker">Five inner landscapes · 03</span>
+    <h2>Hiya du Bois</h2><p class="tag">Inner beauty</p>
+    <p class="t">The secret of a hidden beauty. Spices, flowers and woods meet myrrh, wrapped in incense and resins.</p>
+  </div></section>
+
+  <section><div class="copy">
+    <span class="kicker">Five inner landscapes · 02</span>
+    <h2>Palm Encensé</h2><p class="tag">Talisman of the soul</p>
+    <p class="t">Light awakens incense. A personal ritual, open to a universal spirituality.</p>
+  </div></section>
+
+  <section><div class="copy">
+    <span class="kicker">Five inner landscapes · 01</span>
+    <h2>Imperfect Rose</h2><p class="tag">Unrepeatable beauty</p>
+    <p class="t">An imaginary rose blooms in the desert. Imperfection reveals the extraordinary.</p>
+  </div></section>
+
+  <section><div class="copy">
+    <span class="kicker">From fragrance to skin</span>
+    <h2>The desert becomes <em>a personal presence.</em></h2>
+    <p class="t">Form preserves. Substance tells a story. Skin interprets.</p>
+  </div></section>
+
+  <section class="end"><div class="copy">
+    <h2>Anima Désertique</h2>
+    <p class="t">The origin of pure essence.</p>
+  </div></section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+(function(){
+  var TOTAL=523;                                   // frames extracted from your video (24fps)
+  var small=Math.min(innerWidth,innerHeight)<700 && innerWidth<900;
+  var DIR=small?'assets/f720/':'assets/f1080/';
+  var cv=document.getElementById('cv'), ctx=cv.getContext('2d',{alpha:false});
+  var bar=document.getElementById('bar'), hint=document.getElementById('hint'), loadEl=document.getElementById('load');
+  var secs=[].slice.call(document.querySelectorAll('section .copy'));
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- frame loading (coarse first, then fill gaps) ---------- */
+  var imgs=new Array(TOTAL), ok=new Array(TOTAL), loaded=0;
+  function url(i){return DIR+String(i+1).padStart(4,'0')+'.webp'}
+  function loadFrame(i){
+    return new Promise(function(res){
+      var im=new Image(); im.decoding='async';
+      im.onload=function(){imgs[i]=im;ok[i]=1;loaded++;loadEl.style.transform='scaleX('+(loaded/TOTAL)+')';
+        if(loaded===TOTAL) loadEl.classList.add('done'); res()};
+      im.onerror=res; im.src=url(i);
+    });
+  }
+  var order=[],seen={};
+  [32,8,2,1].forEach(function(s){for(var i=0;i<TOTAL;i+=s){if(!seen[i]){seen[i]=1;order.push(i)}}});
+  order.push(TOTAL-1);
+  var qi=0;
+  function worker(){ if(qi>=order.length) return; var i=order[qi++]; if(ok[i]) return worker(); loadFrame(i).then(worker) }
+  loadFrame(0).then(function(){draw(0);for(var k=0;k<8;k++)worker()});
+
+  function nearest(i){ // closest loaded frame at or before i, else after
+    for(var a=i;a>=0;a--) if(ok[a]) return a;
+    for(var b=i+1;b<TOTAL;b++) if(ok[b]) return b;
+    return -1;
+  }
+
+  /* ---------- canvas ---------- */
+  var cw=0,ch=0;
+  function resize(){
+    var dpr=Math.min(devicePixelRatio||1,2);
+    cw=Math.round(innerWidth*dpr); ch=Math.round(innerHeight*dpr);
+    cv.width=cw; cv.height=ch; last=-1;
+  }
+  addEventListener('resize',resize); resize();
+
+  function paint(im,alpha){
+    var iw=im.naturalWidth, ih=im.naturalHeight; if(!iw) return;
+    var s=Math.max(cw/iw,ch/ih), w=iw*s, h=ih*s;
+    ctx.globalAlpha=alpha;
+    ctx.drawImage(im,(cw-w)/2,(ch-h)/2,w,h);
+  }
+  var last=-1;
+  function draw(f){
+    if(f===last) return; last=f;
+    var a=Math.floor(f), frac=f-a, A=nearest(a);
+    if(A<0) return;
+    paint(imgs[A],1);
+    if(frac>0.02){ var B=nearest(Math.min(TOTAL-1,a+1)); if(B>=0&&B!==A) paint(imgs[B],frac); } // sub-frame blend = silky motion
+    ctx.globalAlpha=1;
+  }
+
+  /* ---------- Lenis + render loop ---------- */
+  var lenis=new Lenis({duration:1.35,easing:function(t){return Math.min(1,1.001-Math.pow(2,-10*t))},smoothWheel:true});
+  var shown=0;
+  function progress(){var m=document.documentElement.scrollHeight-innerHeight;return m>0?Math.min(1,Math.max(0,lenis.scroll/m)):0}
+
+  function tick(t){
+    lenis.raf(t);
+    var p=progress();
+    shown+=(p-shown)*0.18; if(Math.abs(p-shown)<0.00002) shown=p;
+    draw(Math.round(shown*(TOTAL-1)*20)/20);
+
+    bar.style.transform='scaleY('+p+')';
+    hint.style.opacity=p>0.02?0:1;
+    var vh=innerHeight;
+    for(var i=0;i<secs.length;i++){
+      var r=secs[i].getBoundingClientRect(), c=(r.top+r.height/2)/vh, d=Math.abs(c-0.55);
+      var o=reduce?1:Math.max(0,Math.min(1,1.25-d*2.4));
+      secs[i].style.opacity=o;
+      secs[i].style.transform='translate3d(0,'+((1-o)*(c<0.55?-24:24))+'px,0)';
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
